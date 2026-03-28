@@ -3,7 +3,7 @@ name: Build Strategy Builder EXE
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:       # manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -11,40 +11,35 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # 1 — Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2 — Set up Python 3.11
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
 
-      # 3 — Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install --upgrade setuptools wheel
           pip install -r requirements.txt
 
-      # 4 — Build exe with PyInstaller
       - name: Build EXE with PyInstaller
         run: |
           pyinstaller strategy_builder.spec --clean --noconfirm
 
-      # 5 — Verify output
       - name: Verify EXE was created
         run: |
           if (Test-Path "dist\BalfundStrategyBuilder.exe") {
             $size = (Get-Item "dist\BalfundStrategyBuilder.exe").length / 1MB
-            Write-Host "✅ EXE created: $([math]::Round($size, 1)) MB"
+            Write-Host "EXE created: $([math]::Round($size, 1)) MB"
           } else {
-            Write-Host "❌ EXE not found!"
+            Write-Host "EXE not found!"
             exit 1
           }
 
-      # 6 — Upload as artifact (download from Actions tab → Artifacts)
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
