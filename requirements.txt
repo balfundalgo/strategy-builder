@@ -2,7 +2,6 @@ PyQt6==6.7.1
 PyQt6-Qt6==6.7.1
 PyQt6-sip==13.8.0
 pandas==2.2.2
-git+https://github.com/twopirllc/pandas-ta.git@development
 requests==2.32.3
 websocket-client==1.8.0
 pyotp==2.9.0
